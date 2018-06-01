@@ -2,18 +2,21 @@ package views
 
 import (
 	"html/template"
+	"net/http"
 	"path/filepath"
 )
 
 var (
-	LayoutDir   string = "views/layouts/"
-	TemplateExt string = ".gohtml"
+	layoutDir   = "views/layouts/"
+	templateExt = ".gohtml"
 )
 
-// View is a view type
-type View struct {
-	Template *template.Template
-	Layout   string
+func layoutFiles() []string {
+	files, err := filepath.Glob(layoutDir + "*" + templateExt)
+	if err != nil {
+		panic(err)
+	}
+	return files
 }
 
 // NewView returns a view
@@ -30,10 +33,13 @@ func NewView(layout string, files ...string) *View {
 	}
 }
 
-func layoutFiles() []string {
-	files, err := filepath.Glob(LayoutDir + "*" + TemplateExt)
-	if err != nil {
-		panic(err)
-	}
-	return files
+// View is a view type
+type View struct {
+	Template *template.Template
+	Layout   string
+}
+
+// Render renders things
+func (v *View) Render(w http.ResponseWriter, data interface{}) error {
+	return v.Template.ExecuteTemplate(w, v.Layout, data)
 }
