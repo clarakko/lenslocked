@@ -10,7 +10,7 @@ import (
 // NewUsers stuff
 func NewUsers() *Users {
 	return &Users{
-		NewView: views.NewView("bulma", "views/users/new.gohtml")}
+		NewView: views.NewView("bulma", "users/new")}
 }
 
 // Users is the users controller
